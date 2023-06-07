@@ -61,5 +61,26 @@ namespace WebApplication1.Controllers
             return Ok(empList);
         }
 
+        [HttpGet("GetMonthlyAttendanceReport")]
+        public ActionResult<IEnumerable<object>> GetMonthlyAttendanceReport()
+        {
+            var attendanceRecords = _context.tblEmployeeAttendance
+                .Include(e => e.Employee)
+                .ToList();
+
+            var report = attendanceRecords
+                .GroupBy(a => new { a.Employee.employeeName, Month = a.attendanceDate.ToString("MMMM") })
+                .Select(g => new
+                {
+                    EmployeeName = g.Key.employeeName,
+                    MonthName = g.Key.Month,
+                    TotalPresent = g.Count(a => a.isPresent),
+                    TotalAbsent = g.Count(a => a.isAbsent),
+                    TotalOffday = g.Count(a => a.isOffday)
+                })
+                .ToList();
+
+            return Ok(report);
+        }
     }
 }
