@@ -21,8 +21,8 @@ namespace WebApplication1.Controllers
         }
 
 
-        // PUT api/employees/{id}
-        [HttpPut()]
+      
+        [HttpPut("UpdateEmployeeCode")]
         public ActionResult UpdateEmployeeCode(string oldEmpCode, string NewEmpCode)
         {
             var employee = _context.tblEmployee.FirstOrDefault(e => e.employeeCode == oldEmpCode);
